@@ -57,7 +57,7 @@ const pdfSlice = createSlice({
        },
        selectAll(state){
         if(!state.fileInfo) return 
-        state.selectPages=Array.from({length:state.fileInfo.pageCount},(_,i)=>i)
+        state.selectedPages=Array.from({length:state.fileInfo.pageCount},(_,i)=>i)
        },
     deselectAll(state) { state.selectedPages = []; },
     reorderPages(state, action) { state.selectedPages = action.payload; },
