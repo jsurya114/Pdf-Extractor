@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { resetAll } from '../store/pdfSlice';
+import { FileText } from 'lucide-react';
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -8,7 +9,9 @@ export default function Header() {
   return (
     <header className="glass sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent to-accent-light flex items-center justify-center text-xl">📄</div>
+        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent to-accent-light flex items-center justify-center">
+          <FileText className="w-5 h-5 text-white" />
+        </div>
         <div>
           <h1 className="text-lg font-bold tracking-tight">PDF Extractor</h1>
           <p className="text-xs text-gray-500">Select & extract pages</p>

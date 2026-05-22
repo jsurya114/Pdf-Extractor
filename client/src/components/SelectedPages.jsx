@@ -4,6 +4,7 @@ import { reorderPages, deselectAll, extractPages, clearExtracted, togglePage } f
 import { DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy, useSortable, arrayMove } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { X, Download, Loader2 } from 'lucide-react';
 
 function SortableItem({ pageIndex, thumbnail, order }) {
   const dispatch = useDispatch();
@@ -19,7 +20,11 @@ function SortableItem({ pageIndex, thumbnail, order }) {
       </div>
       <span className="absolute top-1 left-1 px-1.5 py-0.5 text-[10px] font-bold rounded bg-accent text-white">#{order}</span>
       <button onClick={(e) => { e.stopPropagation(); dispatch(togglePage(pageIndex)); }}
-        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500/80 text-white text-[10px] flex items-center justify-center hover:bg-red-500 transition-colors">✕</button>
+        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500/80 text-white flex items-center justify-center hover:bg-red-500 transition-colors"
+        aria-label="Remove page"
+      >
+        <X className="w-2.5 h-2.5" />
+      </button>
     </div>
   );
 }
@@ -76,9 +81,14 @@ export default function SelectedPages({ thumbnails }) {
             className="px-5 py-1.5 text-sm font-semibold rounded-lg bg-gradient-to-r from-accent to-accent-light text-white shadow-lg shadow-accent/25 hover:shadow-accent/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
             {extractStatus === 'loading' ? (
               <span className="flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Creating...
+                <Loader2 className="w-4 h-4 animate-spin" />Creating...
               </span>
-            ) : '⬇ Download PDF'}
+            ) : (
+              <span className="flex items-center gap-2">
+                <Download className="w-4 h-4" />
+                Download PDF
+              </span>
+            )}
           </button>
         </div>
       </div>

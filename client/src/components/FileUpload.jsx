@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadPdf, showToast } from '../store/pdfSlice';
+import { UploadCloud, Loader2 } from 'lucide-react';
 
 export default function FileUpload() {
   const dispatch = useDispatch();
@@ -48,8 +49,12 @@ export default function FileUpload() {
           ${isLoading ? 'pointer-events-none opacity-60' : ''}`}
       >
         <input ref={inputRef} type="file" accept=".pdf,application/pdf" onChange={handleChange} className="hidden" id="pdf-upload-input" />
-        <div className="mx-auto w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-accent/20 to-accent-light/20 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-300">
-          {isLoading ? <div className="w-8 h-8 border-3 border-accent/30 border-t-accent rounded-full animate-spin" /> : '📁'}
+        <div className="mx-auto w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br from-accent/20 to-accent-light/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          {isLoading ? (
+            <Loader2 className="w-8 h-8 text-accent animate-spin" />
+          ) : (
+            <UploadCloud className="w-8 h-8 text-accent-light" />
+          )}
         </div>
         <p className="text-lg font-semibold text-gray-300 mb-1">{isLoading ? 'Uploading...' : 'Drop your PDF here'}</p>
         <p className="text-sm text-gray-500">{isLoading ? 'Please wait' : 'or click to browse • Max 50 MB'}</p>

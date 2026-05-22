@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { togglePage } from '../store/pdfSlice';
+import { Search, Check } from 'lucide-react';
 
 export default function PageCard({ pageIndex, thumbnail, onPreview }) {
   const dispatch = useDispatch();
@@ -20,9 +21,7 @@ export default function PageCard({ pageIndex, thumbnail, onPreview }) {
       {/* Zoom / Preview icon on hover */}
       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
         <div className="p-2.5 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 text-white shadow-lg scale-90 group-hover:scale-100 transition-transform duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.637 10.637z" />
-          </svg>
+          <Search className="w-5 h-5" />
         </div>
       </div>
 
@@ -34,8 +33,10 @@ export default function PageCard({ pageIndex, thumbnail, onPreview }) {
         }}
         className="absolute top-2 right-2 z-10"
       >
-        <div className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold transition-all duration-300
-          ${isSelected ? 'bg-accent text-white shadow-md' : 'bg-black/50 border border-white/20 text-transparent hover:border-white/60 hover:bg-black/75 group-hover:border-white/40 group-hover:text-gray-400'}`}>✓</div>
+        <div className={`w-6 h-6 rounded-md flex items-center justify-center transition-all duration-300
+          ${isSelected ? 'bg-accent text-white shadow-md' : 'bg-black/50 border border-white/20 text-transparent hover:border-white/60 hover:bg-black/75 group-hover:border-white/40 group-hover:text-gray-400'}`}>
+          <Check className="w-3.5 h-3.5" strokeWidth={3} />
+        </div>
       </div>
 
       {/* Page Index Label */}
