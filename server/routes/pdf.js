@@ -1,6 +1,6 @@
 import express from 'express'
-import upload from '../middleware/upload'
-import { uploadPdf,getPdf,getPdfInfo,extractPdfPages } from '../controllers/pdfController'
+import upload from '../middleware/upload.js'
+import { uploadPdf,getPdf,getPdfInfo,extractPdfPages } from '../controllers/pdfController.js'
 
 const router = express.Router()
 

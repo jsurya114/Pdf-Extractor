@@ -1,8 +1,10 @@
 import path from 'path'
 import fs from 'fs'
 import { promises as fsPromises } from 'fs'
-import { getPageCount,extractPages } from '../utils/pdfUtils'
+import { fileURLToPath } from 'url'
+import { getPageCount,extractPages } from '../utils/pdfUtils.js'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const UPLOADS_DIR = path.join(__dirname,'..','uploads')
 
 export async function uploadPdf(req,res,next){
@@ -11,7 +13,7 @@ export async function uploadPdf(req,res,next){
       return res.status(400).json({ error: 'No file uploaded', message: 'Please upload a PDF file' });
         }
         const filePath=req.file.path
-        const fileId = path.basename.apply(req.file.filename,'pdf')
+        const fileId = path.basename(req.file.filename, '.pdf')
         const pageCount = await getPageCount(filePath)
         res.status(201).json({ id: fileId, filename: req.file.originalname, pageCount, size: req.file.size });
     } catch (error) {

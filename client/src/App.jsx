@@ -1,122 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import Header from './components/Header';
+import Toast from './components/Toast';
+import FileUpload from './components/FileUpload';
+import PageGrid from './components/PageGrid';
+import SelectedPages from './components/SelectedPages';
+import PagePreviewModal from './components/PagePreviewModal';
+import usePdfRenderer from './hooks/usePdfRenderer';
+import { togglePage } from './store/pdfSlice';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const dispatch = useDispatch();
+  const fileInfo = useSelector((state) => state.pdf.fileInfo);
+  const uploadStatus = useSelector((state) => state.pdf.uploadStatus);
+  const selectedPages = useSelector((state) => state.pdf.selectedPages);
+  
+  const [previewIndex, setPreviewIndex] = useState(null);
+  
+  const pdfUrl = fileInfo ? `/api/pdf/${fileInfo.id}` : null;
+  const { thumbnails, loading: renderingPages, error: renderError } = usePdfRenderer(pdfUrl);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="min-h-screen flex flex-col">
+      <Toast />
+      <Header />
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+        {uploadStatus !== 'succeeded' && <FileUpload />}
+        {uploadStatus === 'succeeded' && renderingPages && (
+          <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
+            <div className="w-12 h-12 border-4 border-accent/30 border-t-accent rounded-full animate-spin mb-4" />
+            <p className="text-gray-400 font-medium">Rendering pages...</p>
+          </div>
+        )}
+        {renderError && <div className="text-center py-20"><p className="text-danger text-lg font-medium">{renderError}</p></div>}
+        {uploadStatus === 'succeeded' && thumbnails.length > 0 && (
+          <>
+            <PageGrid thumbnails={thumbnails} onPreview={(idx) => setPreviewIndex(idx)} />
+            <SelectedPages thumbnails={thumbnails} />
+          </>
+        )}
+      </main>
+      
+      {/* Conditionally render the Page Preview Modal */}
+      {previewIndex !== null && (
+        <PagePreviewModal
+          pageIndex={previewIndex}
+          totalCount={thumbnails.length}
+          thumbnail={thumbnails[previewIndex]}
+          isSelected={selectedPages.includes(previewIndex)}
+          onToggleSelect={() => dispatch(togglePage(previewIndex))}
+          onClose={() => setPreviewIndex(null)}
+          onPrev={previewIndex > 0 ? () => setPreviewIndex(previewIndex - 1) : null}
+          onNext={previewIndex < thumbnails.length - 1 ? () => setPreviewIndex(previewIndex + 1) : null}
+          selectedOrder={selectedPages.indexOf(previewIndex) + 1}
+        />
+      )}
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <footer className="text-center py-4 text-xs text-gray-600 border-t border-white/5">
+        PDF Extractor • Built with React, Redux Toolkit & Express
+      </footer>
+    </div>
+  );
 }
-
-export default App

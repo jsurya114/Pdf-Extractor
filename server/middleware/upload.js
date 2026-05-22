@@ -1,6 +1,9 @@
 import multer from "multer"
 import path from "path"
-import {v4 as uuidV4} from 'uuid'
+import { fileURLToPath } from 'url'
+import { v4 as uuidv4 } from 'uuid'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -18,6 +21,7 @@ const fileFilter = (req, file, cb) => {
     cb(new Error('Only PDF files are allowed'), false);
   }
 };
+
 const upload = multer({
   storage,
   fileFilter,

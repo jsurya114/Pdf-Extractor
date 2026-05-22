@@ -1,5 +1,5 @@
 import { PDFDocument } from "pdf-lib";
-import fs from "fs"
+import { promises as fs } from "fs"
 
 export async function getPageCount(filePath){
     const pdfBytes = await fs.readFile(filePath)
@@ -25,4 +25,3 @@ export async function extractPages(sourcePath,pageIndices){
   }
   return newPdf.save();
 }
-

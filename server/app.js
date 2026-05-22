@@ -1,13 +1,13 @@
 import express from 'express'
 import cors from 'cors'
-
+import pdfRoutes from './routes/pdf.js'
 
 const app = express()
 
 
 app.use(cors())
 app.use(express.json())
-app.use('/api/pdf')
+app.use('/api/pdf',pdfRoutes)
 
 app.use((err,req,res,next)=>{
     console.error('Unhandled error:',err)
